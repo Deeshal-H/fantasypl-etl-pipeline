@@ -1,0 +1,13 @@
+transform:
+  outputs:
+    dev:
+      account: ta98131.ap-southeast-2
+      database: FANTASYPL
+      password: ddbt
+      role: DBT_RW
+      schema: RAW
+      threads: 1
+      type: snowflake
+      user: dbt
+      warehouse: ETL
+  target: dev

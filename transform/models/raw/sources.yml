@@ -1,0 +1,11 @@
+version: 2
+sources:
+  - name: fantasypl_raw
+    database: fantasypl
+    schema: raw
+    tables:
+      - name: gameweeks
+      - name: fixtures
+      - name: players
+      - name: teams
+      - name: player_stats

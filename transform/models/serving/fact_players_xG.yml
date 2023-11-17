@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: fact_players_xG
+    columns:
+
+      - name: player_id
+        tests:
+          - not_null
+
+      - name: position
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['GKP', 'DEF', 'MID', 'FWD']
