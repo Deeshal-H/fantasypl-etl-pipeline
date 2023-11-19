@@ -1,13 +1,13 @@
 transform:
   outputs:
     dev:
-      account: ta98131.ap-southeast-2
-      database: FANTASYPL
-      password: ddbt
-      role: DBT_RW
-      schema: RAW
-      threads: 1
       type: snowflake
-      user: dbt
-      warehouse: ETL
+      account: "{{ env_var('DBT_ENV_SECRET_ACCOUNT') }}"
+      database: "{{ env_var('DBT_ENV_SECRET_DATABASE') }}"
+      warehouse: "{{ env_var('DBT_ENV_SECRET_WAREHOUSE') }}"
+      user: "{{ env_var('DBT_ENV_SECRET_USER') }}"
+      password: "{{ env_var('DBT_ENV_SECRET_PASSWORD') }}"
+      role: "{{ env_var('DBT_ENV_SECRET_ROLE') }}"
+      schema: "{{ env_var('DBT_ENV_SECRET_SCHEMA') }}"
+      threads: 1
   target: dev

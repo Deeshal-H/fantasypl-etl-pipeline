@@ -5,7 +5,7 @@ select
     team_a as away_team_id,
     team_h_score as home_team_score,
     team_a_score as away_team_score,
-    kickoff_time,
+    cast(kickoff_time as datetime) as kickoff_time,
     started,
     finished,
     team_a_difficulty as away_team_difficulty,

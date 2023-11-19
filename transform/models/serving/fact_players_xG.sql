@@ -62,52 +62,74 @@ SELECT
     team_name,
     opponent_id,
     opponent,
-    CAST(xGI AS FLOAT) AS xGI,
-    CAST(xGC AS FLOAT) AS xGC, 
+    xGI,
+    xGC, 
     opponent_cumm_xGI,
     opponent_cumm_xGC,
-    CAST(kickoff_time AS DATETIME) aS kickoff_time,
-    position
+    kickoff_time,
+    position,
+    gameweek_id,
+    gameweek_order
 FROM
 (
     SELECT
-        player_key,
         player_id,
         web_name,
-        xG.team_name,
-        t_a.team_key AS opponent_team_key,
-        t_a.team_id AS opponent_id,
-        t_a.team_name AS opponent,
-        xGI,
-        xGC,
-        t_a.cumm_xGI AS opponent_cumm_xGI,
-        t_a.cumm_xGC AS opponent_cumm_xGC,
+        team_name,
+        opponent_id,
+        opponent,
+        CAST(xGI AS FLOAT) AS xGI,
+        CAST(xGC AS FLOAT) AS xGC, 
+        opponent_cumm_xGI,
+        opponent_cumm_xGC,
         kickoff_time,
-        position
-    FROM cte_players_xg AS xG
-    INNER JOIN {{ ref('dim_fixtures') }} AS f_h ON xG.team_key = f_h.home_team_key
-    INNER JOIN cte_teams_with_xG AS t_a ON t_a.team_key = f_h.away_team_key
-    WHERE f_h.kickoff_time > GETDATE()
-    
-    UNION
-    
-    SELECT
-        player_key,
-        player_id,
-        web_name,
-        xG.team_name,
-        t_h.team_key AS opponent_team_key,
-        t_h.team_id AS opponent_id,
-        t_h.team_name AS opponent,
-        xGI,
-        xGC,
-        t_h.cumm_xGI AS opponent_cumm_xGI,
-        t_h.cumm_xGC AS opponent_cumm_xGC,
-        kickoff_time,
-        position
-    FROM cte_players_xg AS xG
-    INNER JOIN {{ ref('dim_fixtures') }} AS f_a ON xG.team_key = f_a.away_team_key
-    INNER JOIN cte_teams_with_xG AS t_h ON t_h.team_key = f_a.home_team_key
-    WHERE f_a.kickoff_time > GETDATE()
+        position,
+        gameweek_id,
+        ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY kickoff_time) AS gameweek_order
+    FROM
+    (
+        SELECT
+            player_key,
+            player_id,
+            web_name,
+            xG.team_name,
+            t_a.team_key AS opponent_team_key,
+            t_a.team_id AS opponent_id,
+            t_a.team_name AS opponent,
+            xGI,
+            xGC,
+            t_a.cumm_xGI AS opponent_cumm_xGI,
+            t_a.cumm_xGC AS opponent_cumm_xGC,
+            kickoff_time,
+            position,
+            gameweek_id
+        FROM cte_players_xg AS xG
+        INNER JOIN {{ ref('dim_fixtures') }} AS f_h ON xG.team_key = f_h.home_team_key
+        INNER JOIN cte_teams_with_xG AS t_a ON t_a.team_key = f_h.away_team_key
+        WHERE f_h.kickoff_time > GETDATE()
+        
+        UNION
+        
+        SELECT
+            player_key,
+            player_id,
+            web_name,
+            xG.team_name,
+            t_h.team_key AS opponent_team_key,
+            t_h.team_id AS opponent_id,
+            t_h.team_name AS opponent,
+            xGI,
+            xGC,
+            t_h.cumm_xGI AS opponent_cumm_xGI,
+            t_h.cumm_xGC AS opponent_cumm_xGC,
+            kickoff_time,
+            position,
+            gameweek_id
+        FROM cte_players_xg AS xG
+        INNER JOIN {{ ref('dim_fixtures') }} AS f_a ON xG.team_key = f_a.away_team_key
+        INNER JOIN cte_teams_with_xG AS t_h ON t_h.team_key = f_a.home_team_key
+        WHERE f_a.kickoff_time > GETDATE()
+    )
+    ORDER BY kickoff_time
 )
-ORDER BY kickoff_time
+WHERE gameweek_order < 6

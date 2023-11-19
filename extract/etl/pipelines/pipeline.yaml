@@ -4,3 +4,5 @@ s3_bucket_base_url: s3://dec-s3-fantasy-pl/
 bootstrap_path: bootstrap-static/
 fixtures_path: fixtures/
 player_path: element-summary/{element_id}/
+config:
+  log_folder_path: "./etl/logs"
