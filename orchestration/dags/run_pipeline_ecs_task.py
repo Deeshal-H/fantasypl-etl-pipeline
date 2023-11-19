@@ -19,7 +19,7 @@ os.environ["AWS_SECRET_ACCESS_KEY"] = secret_access_key
 os.environ["AWS_DEFAULT_REGION"] = default_region
 
 with DAG(
-    dag_id='run_ecs',
+    dag_id='run_pipeline_ecs_task',
     schedule_interval=None,
     start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
     catchup=False,
@@ -27,7 +27,7 @@ with DAG(
     tags=['ECS', 'Extract']
 ) as dag:
     run_ecs = EcsRunTaskOperator(
-        task_id = 'run_esc',
+        task_id = 'run_pipeline_ecs_task',
         cluster='default',
         task_definition='ecs-task-def-fantasy-pl:4',
         overrides={
