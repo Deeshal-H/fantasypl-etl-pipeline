@@ -37,17 +37,6 @@ How are we going to get data flowing from source to serving? What components and
 - What data loading patterns are you going to be using? 
 - What data transformation patterns are you going to be performing? 
 
-We recommend using a diagramming tool like [draw.io](https://draw.io/) to create your architecture diagram. 
+Solution architecture diagram: 
 
-Here is a sample solution architecture diagram: 
-
-![images/sample-solution-architecture-diagram.png](images/sample-solution-architecture-diagram.png)
-
-## Breakdown of tasks 
-How is your project broken down? Who is doing what?
-
-We recommend using a free Task board such as [Trello](https://trello.com/). This makes it easy to assign and track tasks to each individual. 
-
-Example: 
-
-![images/kanban-task-board.png](images/kanban-task-board.png)
+![images/architecture.png](images/architecture.png)
