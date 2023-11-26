@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 env:
   ROLE_TO_ASSUME: arn:aws:iam::017757760939:role/role-gh-actions-fpl
@@ -34,7 +35,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r .github/workflows/pytest_requirements.txt
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1.7.0
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{env.ROLE_TO_ASSUME}}
         role-session-name: ${{env.ROLE_SESSION_NAME}}
