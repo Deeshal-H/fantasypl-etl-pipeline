@@ -1,6 +1,5 @@
 import pytest
 from etl.connectors.fantasy_pl_api import FantasyPLAPIClient
-import requests
 import yaml
 from pathlib import Path
 
