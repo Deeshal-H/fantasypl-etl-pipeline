@@ -1,6 +1,5 @@
 base_url: https://fantasy.premierleague.com/api/
 s3_bucket_name: dec-s3-fantasy-pl
-s3_bucket_base_url: s3://dec-s3-fantasy-pl/
 bootstrap_path: bootstrap-static/
 fixtures_path: fixtures/
 player_path: element-summary/{element_id}/

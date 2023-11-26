@@ -1,30 +1,23 @@
 from pathlib import Path
 import yaml
 import pandas as pd
-# import logging
-# from datetime import datetime
-# from io import BytesIO
 from etl.assets.pipeline_logging import PipelineLogging
 from etl.connectors.fantasy_pl_api import FantasyPLAPIClient
 from etl.connectors.s3 import FantasyPLS3Client
 
 if __name__ == "__main__":
-    
-    # logging.basicConfig(level=logging.INFO)
-    # pipeline_logger.log_to_file(message="Starting pipeline run")
 
     # retrieve config values from yaml file
     yaml_file_path = __file__.replace(".py", ".yaml")
 
     if Path(yaml_file_path).exists:
-        with open(yaml_file_path) as yaml_file:
+        with open(yaml_file_path, encoding='utf-8') as yaml_file:
             yaml_config = yaml.safe_load(yaml_file)
     else:
         raise Exception(f"Missing {yaml_file_path} file.")
-    
+
     log_path = yaml_config.get("config").get("log_folder_path")
     s3_bucket_name = yaml_config.get("s3_bucket_name")
-    s3_bucket_base_url = yaml_config.get("s3_bucket_base_url")
     base_url = yaml_config.get("base_url")
     bootstrap_path = yaml_config.get("bootstrap_path")
     fixtures_path = yaml_config.get("fixtures_path")
@@ -63,7 +56,7 @@ if __name__ == "__main__":
     df_players = pd.json_normalize(data=base_info.players)
     fantasyPL_S3_client.dataframe_to_s3(input_datafame=df_players, bucket_name=s3_bucket_name, filepath="landing/players.parquet", format="parquet")
     pipeline_logger.log_to_file(message="Uploaded players file")
-    
+
     # create a pandas dataframe from the fixtures json and upload it to the S3 landing location
     df_fixtures = pd.json_normalize(data=fixtures)
     df_fixtures_dropped = df_fixtures.drop(columns=['stats'])
@@ -78,8 +71,6 @@ if __name__ == "__main__":
 
     list_player_stats = []
 
-    count = 0
-
     # loop through the player ids, retrieval the player stats and add results to a list
     for player_id in player_id_list:
         pipeline_logger.log_to_file(message=f"Retrieving stats for player {player_id}")
@@ -89,6 +80,6 @@ if __name__ == "__main__":
     # convert the list of all player stats to a pandas dataframe
     df_player_stats = pd.DataFrame(list_player_stats)
 
-    # upload the player stats to the S3 landing location 
+    # upload the player stats to the S3 landing location
     fantasyPL_S3_client.dataframe_to_s3(input_datafame=df_player_stats, bucket_name=s3_bucket_name, filepath="landing/player_stats.parquet", format="parquet")
     pipeline_logger.log_to_file(message="Uploaded player stats file")

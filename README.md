@@ -1,4 +1,4 @@
-# Fantasy Premier League ETL Project 
+# Fantasy Premier League ETL Pipeline Project 
 
 ## Objective 
 The objective of this data engineering project is to create analytical datasets from the Fantasy Premier League API and present this data on a reporting dashboard.
@@ -39,4 +39,4 @@ How are we going to get data flowing from source to serving? What components and
 
 Solution architecture diagram: 
 
-![images/architecture.png](images/architecture.png)
+![images/architecture-1.png](images/architecture-1.png)

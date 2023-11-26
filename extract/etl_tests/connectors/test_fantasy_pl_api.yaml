@@ -1,0 +1,4 @@
+base_url: https://fantasy.premierleague.com/api/
+bootstrap_path: bootstrap-static/
+fixtures_path: fixtures/
+player_path: element-summary/1/
