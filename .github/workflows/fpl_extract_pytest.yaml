@@ -23,7 +23,7 @@ env:
   ECR_REPO_URI: 017757760939.dkr.ecr.ap-southeast-2.amazonaws.com/fantasy-pl
 
 jobs:
-  pytest:
+  Run-FPL-Extract-Pipeline:
 
     runs-on: ubuntu-latest
 
