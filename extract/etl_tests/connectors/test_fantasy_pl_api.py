@@ -46,12 +46,6 @@ def test_get_base_info(setup):
     assert len(base_info.teams) == 20
     assert len(base_info.players) > 0
 
-    # assert response is not None
-    # assert response.status_code == 200
-    # assert response.json().get("events") is not None
-    # assert response.json().get("teams") is not None
-    # assert response.json().get("elements") is not None
-
 def test_get_fixtures():
 
     base_url = pytest.base_url
