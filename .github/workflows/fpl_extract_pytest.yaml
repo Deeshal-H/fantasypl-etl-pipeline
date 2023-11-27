@@ -19,6 +19,7 @@ env:
   ROLE_TO_ASSUME: arn:aws:iam::017757760939:role/role-gh-actions-fpl
   ROLE_SESSION_NAME: GitHub_to_AWS_via_FederatedOIDC
   AWS_REGION: ap-southeast-2
+  ECR_REPO_URI: 017757760939.dkr.ecr.ap-southeast-2.amazonaws.com/fantasy-pl
 
 jobs:
   pytest:
@@ -26,21 +27,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: checkout code repository in agent
+      uses: actions/checkout@v4
+      with:
+        set-safe-directory: true
+  
     - name: Set up Python 3.9
       uses: actions/setup-python@v4
       with:
         python-version: "3.9"
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r .github/workflows/pytest_requirements.txt
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{env.ROLE_TO_ASSUME}}
         role-session-name: ${{env.ROLE_SESSION_NAME}}
         aws-region: ${{env.AWS_REGION}}
+
     - name: Test with pytest
       run: |
         pytest
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build, tag, and push extract pipeline image to Amazon ECR
+      id: build-image
+      working-directory: extract
+      env:
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        echo "Target repo: ${ECR_REPO_URI}:${IMAGE_TAG}"
+        docker build -t ${ECR_REPO_URI}:${IMAGE_TAG} -f docker\Dockerfile .
+        docker push ${ECR_REPO_URI}:${IMAGE_TAG}
+        echo "image=${ECR_REPO_URI}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
+    
