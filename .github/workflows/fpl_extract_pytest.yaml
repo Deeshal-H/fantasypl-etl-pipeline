@@ -7,7 +7,7 @@ name: Python FPL Extract Pipeline
 on:
   push:
     branches: [ "main" ]
-    paths: ['extract/*']
+    paths: ['extract/**']
   pull_request:
     branches: [ "main" ]
 
