@@ -83,3 +83,5 @@ if __name__ == "__main__":
     # upload the player stats to the S3 landing location
     fantasyPL_S3_client.dataframe_to_s3(input_datafame=df_player_stats, bucket_name=s3_bucket_name, filepath="landing/player_stats.parquet", format="parquet")
     pipeline_logger.log_to_file(message="Uploaded player stats file")
+
+    pipeline_logger.log_to_file(message="Finished pipeline run")
