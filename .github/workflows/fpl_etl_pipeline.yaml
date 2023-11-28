@@ -2,7 +2,7 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Python FPL Extract Pipeline
+name: FPL ETL Pipeline
 
 on:
   push:
@@ -20,7 +20,8 @@ env:
   ROLE_TO_ASSUME: arn:aws:iam::017757760939:role/role-gh-actions-fpl
   ROLE_SESSION_NAME: GitHub_to_AWS_via_FederatedOIDC
   AWS_REGION: ap-southeast-2
-  ECR_REPO_URI: 017757760939.dkr.ecr.ap-southeast-2.amazonaws.com/fantasy-pl
+  ECR_FPL_EXTRACT_REPO_URI: 017757760939.dkr.ecr.ap-southeast-2.amazonaws.com/fantasy-pl
+  ECR_FPL_DBT_TRANSFORM_REPO_URI: 017757760939.dkr.ecr.ap-southeast-2.amazonaws.com/fpl-dbtbuild
 
 jobs:
   Run-FPL-Extract-Pipeline:
@@ -59,7 +60,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Build, tag, and push extract pipeline image to Amazon ECR
-      id: build-image
+      id: build-extract-pipeline-image
       working-directory: extract
       env:
         IMAGE_TAG: ${{ github.sha }}
@@ -67,8 +68,22 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        echo "Target repo: ${ECR_REPO_URI}:${IMAGE_TAG}"
-        docker build -t ${ECR_REPO_URI}:${IMAGE_TAG} -f docker/Dockerfile .
-        docker push ${ECR_REPO_URI}:${IMAGE_TAG}
-        echo "image=${ECR_REPO_URI}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
+        echo "Target repo: ${ECR_FPL_EXTRACT_REPO_URI}:${IMAGE_TAG}"
+        docker build -t ${ECR_FPL_EXTRACT_REPO_URI}:${IMAGE_TAG} -f docker/Dockerfile .
+        docker push ${ECR_FPL_EXTRACT_REPO_URI}:${IMAGE_TAG}
+        echo "image=${ECR_FPL_EXTRACT_REPO_URI}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
+
+    - name: Build, tag, and push dbt transform image to Amazon ECR
+      id: build-dbt-transform-image
+      working-directory: transform
+      env:
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        echo "Target repo: ${ECR_FPL_DBT_TRANSFORM_REPO_URI}:${IMAGE_TAG}"
+        docker build -t ${ECR_FPL_DBT_TRANSFORM_REPO_URI}:${IMAGE_TAG} -f docker/Dockerfile .
+        docker push ${ECR_FPL_DBT_TRANSFORM_REPO_URI}:${IMAGE_TAG}
+        echo "image=${ECR_FPL_DBT_TRANSFORM_REPO_URI}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
     
