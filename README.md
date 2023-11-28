@@ -31,11 +31,6 @@ Below are a list of end points used to access the source data.
 | https://fantasy.premierleague.com/api/element-summary/{element-id}/	| Provides detailed statistics and historical data for a player | 
 
 ## Solution architecture
-How are we going to get data flowing from source to serving? What components and services will we combine to implement the solution? How do we automate the entire running of the solution? 
-
-- What data extraction patterns are you going to be using? 
-- What data loading patterns are you going to be using? 
-- What data transformation patterns are you going to be performing? 
 
 Solution architecture diagram: 
 
