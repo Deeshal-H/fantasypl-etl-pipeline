@@ -7,7 +7,7 @@ name: FPL ETL Pipeline
 on:
   push:
     branches: [ "main" ]
-    paths: ['extract/**']
+    paths: ['extract/**', 'transform/**']
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
