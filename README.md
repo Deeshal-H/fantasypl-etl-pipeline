@@ -34,4 +34,4 @@ Below are a list of end points used to access the source data.
 
 Solution architecture diagram: 
 
-![images/architecture-1.png](images/architecture-1.png)
+![images/architecture.png](images/architecture.png)
